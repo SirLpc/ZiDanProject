@@ -6,23 +6,26 @@ public class RTSCamera : MonoBehaviour {
 	private Vector3 delta;
 
 	void OnEnable(){
-		EasyTouch.On_Swipe += On_Swipe;
-		EasyTouch.On_Drag += On_Drag;
+		EasyTouch.On_Swipe2Fingers += On_Swipe;
+		EasyTouch.On_Drag2Fingers += On_Drag;
 		EasyTouch.On_Twist += On_Twist;
 		EasyTouch.On_Pinch += On_Pinch;
 	}
 
-	
-	void On_Twist (Gesture gesture){
+    private void OnDisable()
+    {
+        EasyTouch.On_Swipe2Fingers -= On_Swipe;
+        EasyTouch.On_Drag2Fingers -= On_Drag;
+        EasyTouch.On_Twist -= On_Twist;
+        EasyTouch.On_Pinch -= On_Pinch;
+    }
 
-		transform.Rotate( Vector3.up * gesture.twistAngle);
-	}
-
-	void OnDestroy(){
-		EasyTouch.On_Swipe -= On_Swipe;
-		EasyTouch.On_Drag -= On_Drag;
+    void OnDestroy(){
+		EasyTouch.On_Swipe2Fingers -= On_Swipe;
+		EasyTouch.On_Drag2Fingers -= On_Drag;
 		EasyTouch.On_Twist -= On_Twist;
-	}
+        EasyTouch.On_Pinch -= On_Pinch;
+    }
 
 
 	void On_Drag (Gesture gesture){
@@ -35,7 +38,13 @@ public class RTSCamera : MonoBehaviour {
 		transform.Translate( Vector3.back * gesture.deltaPosition.y / Screen.height);
 	}
 
-	void On_Pinch (Gesture gesture){	
+    void On_Twist(Gesture gesture)
+    {
+
+        transform.Rotate(Vector3.up * gesture.twistAngle);
+    }
+
+    void On_Pinch (Gesture gesture){	
 		Camera.main.fieldOfView += gesture.deltaPinch * Time.deltaTime;
 	}
 
