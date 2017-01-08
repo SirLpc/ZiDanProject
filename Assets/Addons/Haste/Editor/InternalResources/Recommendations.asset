@@ -1,0 +1,124 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1802954040, guid: 3f3e053a2d65b4eb9a9ef35566b81122, type: 3}
+  m_Name: Recommendations
+  m_EditorClassIdentifier: 
+  recent:
+  - path: Assets/Resources/Home/HomeRoot.prefab
+    pathLower: assets/resources/home/homeroot.prefab
+    name: HomeRoot
+    nameLower: homeroot
+    id: 0
+    source: Project
+    boundariesLower: arhhr.p
+    bitset: 4055406
+    extensionLower: prefab
+    userScore: 0.5904899
+  - path: Assets/Resources/CloneBattle/ChallengeBattleJoinRoot.prefab
+    pathLower: assets/resources/clonebattle/challengebattlejoinroot.prefab
+    name: ChallengeBattleJoinRoot
+    nameLower: challengebattlejoinroot
+    id: 0
+    source: Project
+    boundariesLower: arcbcbjr.p
+    bitset: 4052974
+    extensionLower: prefab
+    userScore: 0.16677174
+  - path: Assets/Resources/Common/GeneralRoot.prefab
+    pathLower: assets/resources/common/generalroot.prefab
+    name: GeneralRoot
+    nameLower: generalroot
+    id: 0
+    source: Project
+    boundariesLower: arcgr.p
+    bitset: 4059374
+    extensionLower: prefab
+    userScore: 0.43046713
+  - path: Assets/Resources/Charge/ChargeRoot.prefab
+    pathLower: assets/resources/charge/chargeroot.prefab
+    name: ChargeRoot
+    nameLower: chargeroot
+    id: 0
+    source: Project
+    boundariesLower: arccr.p
+    bitset: 4047342
+    extensionLower: prefab
+    userScore: 0.9
+  - path: Assets/Resources/Combat/CombatRoot.prefab
+    pathLower: assets/resources/combat/combatroot.prefab
+    name: CombatRoot
+    nameLower: combatroot
+    id: 0
+    source: Project
+    boundariesLower: arccr.p
+    bitset: 4055150
+    extensionLower: prefab
+    userScore: 0.47829682
+  - path: Assets/Resources/Activity/ActivityRoot.prefab
+    pathLower: assets/resources/activity/activityroot.prefab
+    name: ActivityRoot
+    nameLower: activityroot
+    id: 0
+    source: Project
+    boundariesLower: araar.p
+    bitset: 41796206
+    extensionLower: prefab
+    userScore: 0.10941893
+  - path: Assets/Resources/Battle/Explore/ExploreRoot.prefab
+    pathLower: assets/resources/battle/explore/exploreroot.prefab
+    name: ExploreRoot
+    nameLower: exploreroot
+    id: 0
+    source: Project
+    boundariesLower: arbeer.p
+    bitset: 20828270
+    extensionLower: prefab
+    userScore: 0.1350851
+  - path: Assets/Resources/Challenge/ChallengeRoot.prefab
+    pathLower: assets/resources/challenge/challengeroot.prefab
+    name: ChallengeRoot
+    nameLower: challengeroot
+    id: 0
+    source: Project
+    boundariesLower: arccr.p
+    bitset: 4051438
+    extensionLower: prefab
+    userScore: 0.80999994
+  - path: Assets/Resources/Mail/MailRoot.prefab
+    pathLower: assets/resources/mail/mailroot.prefab
+    name: MailRoot
+    nameLower: mailroot
+    id: 0
+    source: Project
+    boundariesLower: armmr.p
+    bitset: 4059758
+    extensionLower: prefab
+    userScore: 0.18530193
+  - path: Assets/Resources/Summary/ChallengeWinRoot.prefab
+    pathLower: assets/resources/summary/challengewinroot.prefab
+    name: ChallengeWinRoot
+    nameLower: challengewinroot
+    id: 0
+    source: Project
+    boundariesLower: arscwr.p
+    bitset: 46003182
+    extensionLower: prefab
+    userScore: 0.20589104
+  - path: Assets/_Prefabs/Global/MagicInputField.prefab
+    pathLower: assets/_prefabs/global/magicinputfield.prefab
+    name: MagicInputField
+    nameLower: magicinputfield
+    id: 0
+    source: Project
+    boundariesLower: apgmif.p
+    bitset: -2143423746
+    extensionLower: prefab
+    userScore: 1
