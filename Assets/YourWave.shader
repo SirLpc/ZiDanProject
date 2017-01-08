@@ -3,22 +3,22 @@
 	Properties{
 		_MainTint("Main tint", Color) = (0,0,0,1)
 		_WaveTint("Wave tint", Color) = (0,0,0,1)
-		_WaveWidth("Wave width", Range(50, 1000)) = 100 
+		_WaveWidth("Wave width", Range(0, 1000)) = 100 
 		_WaveRange("Wave range", Range(0, 1)) = 0.07			//震动幅度
 		_WavePeriod("Wave period", Range(0, 1)) = 1				//震动周期
 		//_WaveRGBFix("Wave RGB fix", vector) = (1.9, 1, 1.5, 1)	//改变颜色(<1为其它色，>1为更白亮)
 		_WaveNum("Wave num", int) = 10
 		//_MainTex("Albedo (RGB)", 2D) = "white" {}
 
-		_Timer("CS Timer", float) = 0.0
-		_StepTimerMod("CS TimerMod", float) = 0.0
-		_FixColor0("CS _FixColor0", vector) = (1,1,1,1)
-		_FixColor1("CS _FixColor1", vector) = (1,1,1,1)
-		_FixColor2("CS _FixColor2", vector) = (1,1,1,1)
-		_FixColor3("CS _FixColor3", vector) = (1,1,1,1)
-		_FixColor4("CS _FixColor4", vector) = (1,1,1,1)
-		_FixColor5("CS _FixColor5", vector) = (1,1,1,1)
-		_FixColor6("CS _FixColor6", vector) = (1,1,1,1)
+		//_Timer("CS Timer", float) = 0.0
+		//_StepTimerMod("CS TimerMod", float) = 0.0
+		//_FixColor0("CS _FixColor0", vector) = (1,1,1,1)
+		//_FixColor1("CS _FixColor1", vector) = (1,1,1,1)
+		//_FixColor2("CS _FixColor2", vector) = (1,1,1,1)
+		//_FixColor3("CS _FixColor3", vector) = (1,1,1,1)
+		//_FixColor4("CS _FixColor4", vector) = (1,1,1,1)
+		//_FixColor5("CS _FixColor5", vector) = (1,1,1,1)
+		//_FixColor6("CS _FixColor6", vector) = (1,1,1,1)
 	}
 
 		SubShader{
@@ -40,13 +40,7 @@
 
 				float _Timer;
 				fixed _StepTimerMod;
-				fixed3 _FixColor0;
-				fixed3 _FixColor1;
-				fixed3 _FixColor2;
-				fixed3 _FixColor3;
-				fixed3 _FixColor4;
-				fixed3 _FixColor5;
-				fixed3 _FixColor6;
+				fixed3 _FixColor[7];
 
 				//sampler2D _MainTex;
 
@@ -87,45 +81,26 @@
 						   uv = -1.0 + 2.0*uv;	//将UV区域从0到1重映射到-1到1方便操作
 						   uv.y += 0.00001;		//为0当被除数就完了
 
-						   fixed delta = 1 / 6.0;	//count 5 - 1
+						   fixed delta = 0.1667;	// 1 / 6.0
 						   fixed t = _StepTimerMod;
 						   fixed tm = fmod(t, delta);
 
 						   for (half i = 0.0; i < _WaveNum; i++) 
 						   {
-							   uv.y += (_WaveRange * cos(uv.x *_WavePeriod + i / 7.0 + _Timer));
+							   uv.y += (_WaveRange * cos(uv.x *_WavePeriod + i * 0.1428 + _Timer));
 							   wave_width = abs(1.0 / (_WaveWidth * uv.y));	//知道为什么要加0.1了吧
 
-							   fixed3 fix;
+							   fixed3 fix = _FixColor[6];
 
-							   if(uv01.x < delta * 0 + tm)
+							   for(int j = 0 ; j < 6; j++)
 							   {
-							   		fix = _FixColor0;
-						   		}	
-							   	else if(uv01.x < delta * 1  + tm)
-							   	{
-							   		fix = _FixColor1;
-							   	}
-							   	else if(uv01.x < delta * 2 + tm)
-							   	{
-							   		fix = _FixColor2;
-						   		}
-							   	else if(uv01.x < delta * 3 + tm)
-							   	{
-							   		fix = _FixColor3;
-						   		}
-						   		else if(uv01.x < delta * 4 + tm)
-							   	{
-							   		fix = _FixColor4;
-						   		}
-						   		else if(uv01.x < delta * 5 + tm)
-							   	{
-							   		fix = _FixColor5;
-						   		}
-							   	else
-							   	{
-							   		fix = _FixColor6;
-							   	}
+			   					   if(uv01.x < delta * j + tm)
+								   {
+								   		fix = _FixColor[j];
+								   		break;
+							   		}	
+							   }
+
 
 							   wave_color += fixed3(wave_width * fix.x, wave_width * fix.y, wave_width * fix.z);
 
