@@ -17,6 +17,8 @@
 		_FixColor2("CS _FixColor2", vector) = (1,1,1,1)
 		_FixColor3("CS _FixColor3", vector) = (1,1,1,1)
 		_FixColor4("CS _FixColor4", vector) = (1,1,1,1)
+		_FixColor5("CS _FixColor5", vector) = (1,1,1,1)
+		_FixColor6("CS _FixColor6", vector) = (1,1,1,1)
 	}
 
 		SubShader{
@@ -36,13 +38,15 @@
 				half _WavePeriod;
 				int _WaveNum;
 
-				half _Timer;
+				float _Timer;
 				fixed _StepTimerMod;
 				fixed3 _FixColor0;
 				fixed3 _FixColor1;
 				fixed3 _FixColor2;
 				fixed3 _FixColor3;
 				fixed3 _FixColor4;
+				fixed3 _FixColor5;
+				fixed3 _FixColor6;
 
 				//sampler2D _MainTex;
 
@@ -83,7 +87,7 @@
 						   uv = -1.0 + 2.0*uv;	//将UV区域从0到1重映射到-1到1方便操作
 						   uv.y += 0.00001;		//为0当被除数就完了
 
-						   fixed delta = 1 / 4.0;	//count 5 - 1
+						   fixed delta = 1 / 6.0;	//count 5 - 1
 						   fixed t = _StepTimerMod;
 						   fixed tm = fmod(t, delta);
 
@@ -110,15 +114,23 @@
 							   	{
 							   		fix = _FixColor3;
 						   		}
-							   	else
+						   		else if(uv01.x < delta * 4 + tm)
 							   	{
 							   		fix = _FixColor4;
+						   		}
+						   		else if(uv01.x < delta * 5 + tm)
+							   	{
+							   		fix = _FixColor5;
+						   		}
+							   	else
+							   	{
+							   		fix = _FixColor6;
 							   	}
 
 							   wave_color += fixed3(wave_width * fix.x, wave_width * fix.y, wave_width * fix.z);
 
 						   	}
-						   final_color = bg_color + wave_color;
+						   final_color = bg_color + wave_color; 
 
 						   return fixed4(final_color, 1.0);
 					   }
