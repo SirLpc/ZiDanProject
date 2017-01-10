@@ -6,19 +6,9 @@
 		_WaveWidth("Wave width", Range(0, 1000)) = 100 
 		_WaveRange("Wave range", Range(0, 1)) = 0.07			//震动幅度
 		_WavePeriod("Wave period", Range(0, 1)) = 1				//震动周期
-		//_WaveRGBFix("Wave RGB fix", vector) = (1.9, 1, 1.5, 1)	//改变颜色(<1为其它色，>1为更白亮)
+		_WaveRGBFix("Wave RGB fix", vector) = (1.9, 1, 1.5, 1)	//改变颜色(<1为其它色，>1为更白亮)
 		_WaveNum("Wave num", int) = 10
 		//_MainTex("Albedo (RGB)", 2D) = "white" {}
-
-		//_Timer("CS Timer", float) = 0.0
-		//_StepTimerMod("CS TimerMod", float) = 0.0
-		//_FixColor0("CS _FixColor0", vector) = (1,1,1,1)
-		//_FixColor1("CS _FixColor1", vector) = (1,1,1,1)
-		//_FixColor2("CS _FixColor2", vector) = (1,1,1,1)
-		//_FixColor3("CS _FixColor3", vector) = (1,1,1,1)
-		//_FixColor4("CS _FixColor4", vector) = (1,1,1,1)
-		//_FixColor5("CS _FixColor5", vector) = (1,1,1,1)
-		//_FixColor6("CS _FixColor6", vector) = (1,1,1,1)
 	}
 
 		SubShader{
@@ -36,11 +26,15 @@
 				half _WaveWidth;
 				half _WaveRange;
 				half _WavePeriod;
+				fixed3 _WaveRGBFix;
 				int _WaveNum;
 
 				float _Timer;
 				fixed _StepTimerMod;
-				fixed3 _FixColor[7];
+				fixed4 _FixColor[7];
+
+				int _MaxPointCount;
+
 
 				//sampler2D _MainTex;
 
@@ -54,6 +48,36 @@
 					o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
 					o.scrPos = ComputeScreenPos(o.pos);
 					return o;
+				}
+
+				int findCloseIdx(fixed target)
+				{
+					int low = 0;
+					int high = _MaxPointCount;
+					int mid;
+					int idx = -1;
+					while(low <= high)
+					{
+						mid = (low + high) * 0.5;
+						if(target == _FixColor[mid].w || mid == low)
+						{
+							idx = mid;
+							break;
+						}
+						else if(target > _FixColor[mid].w)
+						{
+							low = mid;
+						}
+						else if(target < _FixColor[mid].w)
+						{
+							high = mid;
+						}
+					}
+					if(idx + 1 < _MaxPointCount && abs(target - _FixColor[idx].w) > abs(target - _FixColor[idx + 1].w))
+					{
+						idx += 1;
+					}
+					return idx;
 				}
 
 				fixed4 frag(vertOut i) : COLOR0 {
@@ -79,27 +103,50 @@
 						   half wave_width = 0.01;
 						   fixed2 uv01 = uv;
 						   uv = -1.0 + 2.0*uv;	//将UV区域从0到1重映射到-1到1方便操作
-						   uv.y += 0.00001;		//为0当被除数就完了
+						   uv.y += 0.00001;		//为0当除数就完了
 
 						   fixed delta = 0.1667;	// 1 / 6.0
 						   fixed t = _StepTimerMod;
 						   fixed tm = fmod(t, delta);
+
 
 						   for (half i = 0.0; i < _WaveNum; i++) 
 						   {
 							   uv.y += (_WaveRange * cos(uv.x *_WavePeriod + i * 0.1428 + _Timer));
 							   wave_width = abs(1.0 / (_WaveWidth * uv.y));	//知道为什么要加0.1了吧
 
-							   fixed3 fix = _FixColor[6];
-
-							   for(int j = 0 ; j < 6; j++)
+							   int targetIdx = findCloseIdx(uv01.x);
+							   fixed target = _FixColor[targetIdx].w;
+							   fixed3 fix;
+							   if(uv01.x >= target)
 							   {
-			   					   if(uv01.x < delta * j + tm)
-								   {
-								   		fix = _FixColor[j];
-								   		break;
-							   		}	
+							   		int sidx = targetIdx;
+							   		int eidx = targetIdx + 1;
+							   		if(eidx >= _MaxPointCount)
+							   			eidx = 0;
+
+							   		fix = lerp(_FixColor[sidx], _FixColor[eidx], (uv01.x - _FixColor[sidx].w) / (_FixColor[eidx].w - _FixColor[sidx].w));
 							   }
+							   else 
+							   {
+		   					   		int sidx = targetIdx;
+		   					   		int eidx = targetIdx - 1;
+							   		if(eidx < 0)
+							   			eidx = _MaxPointCount - 1;
+				
+							   		fix = lerp(_FixColor[sidx], _FixColor[eidx], (uv01.x - _FixColor[sidx].w) / (_FixColor[eidx].w - _FixColor[sidx].w));
+							   }
+
+
+//							   fixed3 fix = _FixColor[6];
+//							   for(int j = 0 ; j < 6; j++)
+//							   {
+//			   					   if(uv01.x < delta * j + tm)
+//								   {
+//								   		fix = _FixColor[j];
+//								   		break;
+//							   		}	
+//							   }
 
 
 							   wave_color += fixed3(wave_width * fix.x, wave_width * fix.y, wave_width * fix.z);
