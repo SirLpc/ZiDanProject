@@ -83,70 +83,56 @@
 				fixed4 frag(vertOut i) : COLOR0 
 				{
 
-					//fixed3 COLOR1 = fixed3(0.0,0.0,0.3);  
-					//fixed3 COLOR2 = fixed3(0.5,0.0,0.0);  
-					//float BLOCK_WIDTH = 0.03;  
-					
 					fixed2 uv = (i.scrPos.yx / i.scrPos.w);
 
 					// To create the BG pattern  
-					fixed3 final_color = fixed3(1.0, 1, 1);
+					fixed3 final_color = fixed3(1.0, 1.0, 1.0);
 					fixed3 bg_color = _MainTint; //fixed3(0.0, 0, 0);
 					fixed3 wave_color = _WaveTint; //fixed3(0.0, 0, 0);
 
-					/*     float c1 = fmod(uv.x, 2.0* BLOCK_WIDTH);
-						   c1 = step(BLOCK_WIDTH, c1);
-						   float c2 = fmod(uv.y, 2.0* BLOCK_WIDTH);
-						   c2 = step(BLOCK_WIDTH, c2);
-						   bg_color = lerp(uv.x * COLOR1, uv.y * COLOR2, c1*c2);  */
 
-						   // TO create the waves   
-						   half wave_width = 0.01;
-						   fixed2 uv01 = uv;
-						   uv = -1.0 + 2.0*uv;	//将UV区域从0到1重映射到-1到1方便操作
-						   uv.y += 0.00001;		//为0当除数就完了
+				   // TO create the waves   
+				   half wave_width = 0.01;
+				   fixed2 uv01 = uv;
+				   uv = -1.0 + 2.0 * uv;	//将UV区域从0到1重映射到-1到1方便操作
+				   uv.y += 0.00001;		//为0当除数就完了
 
-						   fixed delta = 0.1667;	// 1 / 6.0
-						   fixed t = _StepTimerMod;
-						   fixed tm = fmod(t, delta);
+				   fixed t = _StepTimerMod;
+				   
+				   for (half i = 0.0; i < _WaveNum; i++) 
+				   {
+					   uv.y += (_WaveRange * cos(uv.x *_WavePeriod + i * 0.1428 + _Timer));
+					   wave_width = abs(1.0 / (_WaveWidth * uv.y));	//知道为什么要加0.1了吧
 
-
-						   for (half i = 0.0; i < _WaveNum; i++) 
-						   {
-							   uv.y += (_WaveRange * cos(uv.x *_WavePeriod + i * 0.1428 + _Timer));
-							   wave_width = abs(1.0 / (_WaveWidth * uv.y));	//知道为什么要加0.1了吧
-
-							   int targetIdx = findCloseIdx(uv01.x);
-							   fixed target = _FixColor[targetIdx].w;
-							   fixed3 fix = _FixColor[targetIdx];
-							   if(uv01.x >= target)
-							   {
-							   		int sidx = targetIdx;
-							   		int eidx = targetIdx + 1;
-							   		if(eidx >= _MaxPointCount)
-							   			eidx = 0;
-
-							   		fix = lerp(_FixColor[sidx], _FixColor[eidx], (uv01.x - _FixColor[sidx].w) / (_FixColor[eidx].w - _FixColor[sidx].w) * 0.75f);
-							   }
-							   else 
-							   {
-		   					   		int sidx = targetIdx;
-		   					   		int eidx = targetIdx - 1;
-							   		if(eidx < 0)
-							   			eidx = _MaxPointCount - 1;
-				
-							   		fix = lerp(_FixColor[sidx], _FixColor[eidx], (uv01.x - _FixColor[sidx].w) / (_FixColor[eidx].w - _FixColor[sidx].w) * 0.75f);
-							   }
-
-							   wave_color += fixed3(wave_width * fix.x, wave_width * fix.y, wave_width * fix.z);
-
-						   	}
-						   final_color = bg_color + wave_color; 
-
-						   return fixed4(final_color, 1.0);
+					   int targetIdx = findCloseIdx(uv01.x);
+					   fixed target = _FixColor[targetIdx].w;
+					   fixed3 fix = _FixColor[targetIdx];
+					   int sidx = targetIdx;
+					   int eidx;
+					   if(uv01.x >= target)
+					   {
+					   		eidx = targetIdx + 1;
+					   		if(eidx >= _MaxPointCount)
+					   			eidx = 0;
 					   }
+					   else 
+					   {
+   					   		eidx = targetIdx - 1;
+					   		if(eidx < 0)
+					   			eidx = _MaxPointCount - 1;		
+					   }
+		   			   fix = lerp(_FixColor[sidx], _FixColor[eidx], (uv01.x - _FixColor[sidx].w) / (_FixColor[eidx].w - _FixColor[sidx].w) * 0.75f);
 
-					   ENDCG
-				   }
+					   wave_color += fixed3(wave_width * fix.x, wave_width * fix.y, wave_width * fix.z);
+
+				   	}
+
+				   final_color = bg_color + wave_color; 
+
+				   return fixed4(final_color, 1.0);
+			   }
+
+			   ENDCG
+		   }
 	}
 }

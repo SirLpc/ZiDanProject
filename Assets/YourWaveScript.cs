@@ -14,15 +14,15 @@ public class YourWaveScript : MonoBehaviour
 	private Vector4 _fixColorZero = new Vector4(0f,		0f,			0f,			100f) ;
 
 	private Vector4 _modelColor0 = new Vector4(1.9f * 0.1f,	1f,			1.5f,			-0.7f) ;
-	private Vector4 _modelColor1 = new Vector4(1.9f,			1f * 0.1f,	1.5f,			-0.5f) ;
-	private Vector4 _modelColor2 = new Vector4(1.9f,			1f,			1.5f * 0.1f,	-0.3f) ;
+	private Vector4 _modelColor1 = new Vector4(1.9f,		1f * 0.1f,	1.5f,			-0.5f) ;
+	private Vector4 _modelColor2 = new Vector4(1.9f,		1f,			1.5f * 0.1f,	-0.3f) ;
 	private Vector4 _modelColor3 = new Vector4(1.9f * 0.1f,	1f * 0.1f,	1.5f,			0f) ;
-	private Vector4 _modelColor4 = new Vector4(1.9f,			1f * 0.1f,	1.5f * 0.1f,	0.2f) ;
+	private Vector4 _modelColor4 = new Vector4(1.9f,		1f * 0.1f,	1.5f * 0.1f,	0.2f) ;
 	private Vector4 _modelColor5 = new Vector4(1.9f * 0.1f,	1f,			1.5f * 0.1f,	0.4f) ;
 	private Vector4 _modelColor6 = new Vector4(1.9f * 0.1f,	1f * 0.1f,	1.5f * 0.1f,	0.5f) ;
 	private Vector4 _modelColor7 = new Vector4(1.9f * 0.5f,	1f,			1.5f,			0.7f) ;
-	private Vector4 _modelColor8 = new Vector4(1.9f,			1f * 0.5f,	1.5f,			0.9f) ;
-	private Vector4 _modelColor9 = new Vector4(1.9f,			1f,			1.5f * 0.5f,	1.2f) ;
+	private Vector4 _modelColor8 = new Vector4(1.9f,		1f * 0.5f,	1.5f,			0.9f) ;
+	private Vector4 _modelColor9 = new Vector4(1.9f,		1f,			1.5f * 0.5f,	1.2f) ;
 	private Vector4 _modelColor10 = new Vector4(1.9f * 0.1f,	1f,			1.5f,			-0.7f) ;
 	private Vector4 _modelColor11 = new Vector4(1.9f,			1f * 0.1f,	1.5f,			-0.5f) ;
 	private Vector4 _modelColor12 = new Vector4(1.9f,			1f,			1.5f * 0.1f,	-0.3f) ;
@@ -41,8 +41,7 @@ public class YourWaveScript : MonoBehaviour
 
 	private float _beatTimer;
 	private float _waveTimer;
-
-
+	
 	private const float TimeScale = 0.3f;
 	private const float PI = 3.1415926f;
 	private const float PI2 = PI * 2f;
@@ -51,8 +50,7 @@ public class YourWaveScript : MonoBehaviour
 	private void Awake ()
 	{
 		_mat = GetComponent<UnityEngine.UI.RawImage> ().material;
-
-
+		
 		_fixColors = new Vector4[(int)Count];
 		for (int i = 0; i < Count; i++) {
 			_fixColors [i] = _fixColorZero;
@@ -83,7 +81,6 @@ public class YourWaveScript : MonoBehaviour
 			_waveTimer = 0f;
 
 		_mat.SetFloat ("_Timer", _waveTimer);
-		Debug.Log (_beatTimer);
 
 		ResetDatasToMat ();
 	}
@@ -134,95 +131,12 @@ public class YourWaveScript : MonoBehaviour
 
 		for (int i = 1; i < _fixColors.Length; i++) 
 		{
-//			if ((Vector3)_fixColors [i] == Vector3.zero)
-//				continue;
+			if (_fixColors [i].w > 2f)
+				break;
 			
 			_fixColors [i].w += Time.deltaTime * TimeScale;
-		}
-
-
-		for (int i = 0; i < Count; i++)
-		{
 			_mat.SetVector ("_FixColor" + i, _fixColors [i]);
-		}
-
-		return;
-
-		/*
-		var tmod = Time.time % Count * Delta;
-		_mat.SetFloat ("_StepTimerMod", tmod);
-		
-		if (tmod < Delta * 1) 
-		{
-			_mat.SetVector ("_FixColor0", _fixColors [0]);
-			_mat.SetVector ("_FixColor1", _fixColors [6]);
-			_mat.SetVector ("_FixColor2", _fixColors [5]);
-			_mat.SetVector ("_FixColor3", _fixColors [4]);
-			_mat.SetVector ("_FixColor4", _fixColors [3]);
-			_mat.SetVector ("_FixColor5", _fixColors [2]);
-			_mat.SetVector ("_FixColor6", _fixColors [1]);
-		}
-		else if(tmod < Delta * 2)
-		{
-			_mat.SetVector ("_FixColor0", _fixColors [1]);
-			_mat.SetVector ("_FixColor1", _fixColors [0]);
-			_mat.SetVector ("_FixColor2", _fixColors [6]);
-			_mat.SetVector ("_FixColor3", _fixColors [5]);
-			_mat.SetVector ("_FixColor4", _fixColors [4]);
-			_mat.SetVector ("_FixColor5", _fixColors [3]);
-			_mat.SetVector ("_FixColor6", _fixColors [2]);
-		}
-		else if(tmod < Delta * 3)
-		{
-			_mat.SetVector ("_FixColor0", _fixColors [2]);
-			_mat.SetVector ("_FixColor1", _fixColors [1]);
-			_mat.SetVector ("_FixColor2", _fixColors [0]);
-			_mat.SetVector ("_FixColor3", _fixColors [6]);
-			_mat.SetVector ("_FixColor4", _fixColors [5]);
-			_mat.SetVector ("_FixColor5", _fixColors [4]);
-			_mat.SetVector ("_FixColor6", _fixColors [3]);
-		}
-		else if(tmod < Delta * 4)
-		{
-			_mat.SetVector ("_FixColor0", _fixColors [3]);
-			_mat.SetVector ("_FixColor1", _fixColors [2]);
-			_mat.SetVector ("_FixColor2", _fixColors [1]);
-			_mat.SetVector ("_FixColor3", _fixColors [0]);
-			_mat.SetVector ("_FixColor4", _fixColors [6]);
-			_mat.SetVector ("_FixColor5", _fixColors [5]);
-			_mat.SetVector ("_FixColor6", _fixColors [4]);
-		}
-		else if(tmod < Delta * 5)
-		{
-			_mat.SetVector ("_FixColor0", _fixColors [4]);
-			_mat.SetVector ("_FixColor1", _fixColors [3]);
-			_mat.SetVector ("_FixColor2", _fixColors [2]);
-			_mat.SetVector ("_FixColor3", _fixColors [1]);
-			_mat.SetVector ("_FixColor4", _fixColors [0]);
-			_mat.SetVector ("_FixColor5", _fixColors [6]);
-			_mat.SetVector ("_FixColor6", _fixColors [5]);
-		}
-		else if(tmod < Delta * 6)
-		{
-			_mat.SetVector ("_FixColor0", _fixColors [5]);
-			_mat.SetVector ("_FixColor1", _fixColors [4]);
-			_mat.SetVector ("_FixColor2", _fixColors [3]);
-			_mat.SetVector ("_FixColor3", _fixColors [2]);
-			_mat.SetVector ("_FixColor4", _fixColors [1]);
-			_mat.SetVector ("_FixColor5", _fixColors [0]);
-			_mat.SetVector ("_FixColor6", _fixColors [6]);
-		}
-		else 
-		{
-			_mat.SetVector ("_FixColor0", _fixColors [6]);
-			_mat.SetVector ("_FixColor1", _fixColors [5]);
-			_mat.SetVector ("_FixColor2", _fixColors [4]);
-			_mat.SetVector ("_FixColor3", _fixColors [3]);
-			_mat.SetVector ("_FixColor4", _fixColors [2]);
-			_mat.SetVector ("_FixColor5", _fixColors [1]);
-			_mat.SetVector ("_FixColor6", _fixColors [0]);
-		}
-		*/
+		}	
 	}
 
 
