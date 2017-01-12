@@ -31,7 +31,7 @@
 
 				float _Timer;
 				fixed _StepTimerMod;
-				fixed4 _FixColor[7];
+				fixed4 _FixColor[20];
 
 				int _MaxPointCount;
 
@@ -39,8 +39,8 @@
 				//sampler2D _MainTex;
 
 				struct vertOut {
-					float4 pos:SV_POSITION;
-					float4 scrPos : TEXCOORD0;
+					half4 pos:SV_POSITION;
+					half4 scrPos : TEXCOORD0;
 				};
 
 				vertOut vert(appdata_base v) {
@@ -80,13 +80,14 @@
 					return idx;
 				}
 
-				fixed4 frag(vertOut i) : COLOR0 {
+				fixed4 frag(vertOut i) : COLOR0 
+				{
 
 					//fixed3 COLOR1 = fixed3(0.0,0.0,0.3);  
 					//fixed3 COLOR2 = fixed3(0.5,0.0,0.0);  
 					//float BLOCK_WIDTH = 0.03;  
 					
-					float2 uv = (i.scrPos.yx / i.scrPos.w);
+					fixed2 uv = (i.scrPos.yx / i.scrPos.w);
 
 					// To create the BG pattern  
 					fixed3 final_color = fixed3(1.0, 1, 1);
@@ -117,7 +118,7 @@
 
 							   int targetIdx = findCloseIdx(uv01.x);
 							   fixed target = _FixColor[targetIdx].w;
-							   fixed3 fix;
+							   fixed3 fix = _FixColor[targetIdx];
 							   if(uv01.x >= target)
 							   {
 							   		int sidx = targetIdx;
@@ -125,7 +126,7 @@
 							   		if(eidx >= _MaxPointCount)
 							   			eidx = 0;
 
-							   		fix = lerp(_FixColor[sidx], _FixColor[eidx], (uv01.x - _FixColor[sidx].w) / (_FixColor[eidx].w - _FixColor[sidx].w));
+							   		fix = lerp(_FixColor[sidx], _FixColor[eidx], (uv01.x - _FixColor[sidx].w) / (_FixColor[eidx].w - _FixColor[sidx].w) * 0.75f);
 							   }
 							   else 
 							   {
@@ -134,20 +135,8 @@
 							   		if(eidx < 0)
 							   			eidx = _MaxPointCount - 1;
 				
-							   		fix = lerp(_FixColor[sidx], _FixColor[eidx], (uv01.x - _FixColor[sidx].w) / (_FixColor[eidx].w - _FixColor[sidx].w));
+							   		fix = lerp(_FixColor[sidx], _FixColor[eidx], (uv01.x - _FixColor[sidx].w) / (_FixColor[eidx].w - _FixColor[sidx].w) * 0.75f);
 							   }
-
-
-//							   fixed3 fix = _FixColor[6];
-//							   for(int j = 0 ; j < 6; j++)
-//							   {
-//			   					   if(uv01.x < delta * j + tm)
-//								   {
-//								   		fix = _FixColor[j];
-//								   		break;
-//							   		}	
-//							   }
-
 
 							   wave_color += fixed3(wave_width * fix.x, wave_width * fix.y, wave_width * fix.z);
 
