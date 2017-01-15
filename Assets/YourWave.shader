@@ -107,6 +107,12 @@
 					   int targetIdx = findCloseIdx(uv01.x);
 					   fixed target = _FixColor[targetIdx].w;
 					   fixed3 fix = _FixColor[targetIdx];
+
+					   if(abs(uv01.x - target) < 0.003)
+					   {
+					   		wave_width *= 2;
+					   }
+
 					   int sidx = targetIdx;
 					   int eidx;
 					   if(uv01.x >= target)
