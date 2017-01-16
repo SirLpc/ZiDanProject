@@ -6,7 +6,7 @@
 		_WaveWidth("Wave width", Range(0, 1000)) = 100 
 		_WaveRange("Wave range", Range(0, 1)) = 0.07			//震动幅度
 		_WavePeriod("Wave period", Range(0, 1)) = 1				//震动周期
-		_WaveRGBFix("Wave RGB fix", vector) = (1.9, 1, 1.5, 1)	//改变颜色(<1为其它色，>1为更白亮)
+		//_WaveRGBFix("Wave RGB fix", vector) = (1.9, 1, 1.5, 1)	//改变颜色(<1为其它色，>1为更白亮)
 		_WaveNum("Wave num", int) = 10
 		//_MainTex("Albedo (RGB)", 2D) = "white" {}
 	}
@@ -16,7 +16,7 @@
 				CGPROGRAM
 
 				#include "UnityCG.cginc"                
-				#pragma target 3.0  
+				//#pragma target 3.0  
 
 				#pragma vertex vert
 				#pragma fragment frag
@@ -26,11 +26,10 @@
 				half _WaveWidth;
 				half _WaveRange;
 				half _WavePeriod;
-				fixed3 _WaveRGBFix;
+				//fixed3 _WaveRGBFix;
 				int _WaveNum;
 
 				float _Timer;
-				fixed _StepTimerMod;
 				fixed4 _FixColor[20];
 
 				int _MaxPointCount;
@@ -38,12 +37,14 @@
 
 				//sampler2D _MainTex;
 
-				struct vertOut {
+				struct vertOut 
+				{
 					half4 pos:SV_POSITION;
 					half4 scrPos : TEXCOORD0;
 				};
 
-				vertOut vert(appdata_base v) {
+				vertOut vert(appdata_base v) 
+				{
 					vertOut o;
 					o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
 					o.scrPos = ComputeScreenPos(o.pos);
@@ -59,7 +60,7 @@
 					while(low <= high)
 					{
 						mid = (low + high) * 0.5;
-						if(target == _FixColor[mid].w || mid == low)
+						if(mid == low || target == _FixColor[mid].w)
 						{
 							idx = mid;
 							break;
@@ -90,29 +91,26 @@
 					fixed3 bg_color = _MainTint; //fixed3(0.0, 0, 0);
 					fixed3 wave_color = _WaveTint; //fixed3(0.0, 0, 0);
 
-
 				   // TO create the waves   
 				   half wave_width = 0.01;
 				   fixed2 uv01 = uv;
 				   uv = -1.0 + 2.0 * uv;	//将UV区域从0到1重映射到-1到1方便操作
-				   uv.y += 0.00001;		//为0当除数就完了
+				   uv.y += 0.00001;			//为0当除数就完了
 
-				   fixed t = _StepTimerMod;
-				   
 				   for (half i = 0.0; i < _WaveNum; i++) 
 				   {
 					   uv.y += (_WaveRange * cos(uv.x *_WavePeriod + i * 0.1428 + _Timer));
-					   wave_width = abs(1.0 / (_WaveWidth * uv.y));	//知道为什么要加0.1了吧
+					   wave_width = abs(1.0 / (_WaveWidth * uv.y));		//知道为什么要加0.00001了吧
 
 					   int targetIdx = findCloseIdx(uv01.x);
 					   fixed target = _FixColor[targetIdx].w;
 					   fixed3 fix = _FixColor[targetIdx];
 
-					   if(abs(uv01.x - target) < 0.003)
+					   if(abs(uv01.x - target) < 0.002)
 					   {
 					   		wave_width *= 2;
 					   }
-
+/*
 					   int sidx = targetIdx;
 					   int eidx;
 					   if(uv01.x >= target)
@@ -125,12 +123,12 @@
 					   {
    					   		eidx = targetIdx - 1;
 					   		if(eidx < 0)
-					   			eidx = _MaxPointCount - 1;		
+					   			eidx = _MaxPointCount - 1;	
 					   }
+
 		   			   fix = lerp(_FixColor[sidx], _FixColor[eidx], (uv01.x - _FixColor[sidx].w) / (_FixColor[eidx].w - _FixColor[sidx].w) * 0.75f);
-
+*/
 					   wave_color += fixed3(wave_width * fix.x, wave_width * fix.y, wave_width * fix.z);
-
 				   	}
 
 				   final_color = bg_color + wave_color; 
