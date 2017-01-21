@@ -1,0 +1,43 @@
+口袋理财
+简理财
+荷包
+微信
+UC
+
+
+shape - radius 0.01
+transform - rotate -45,90,0
+renderer - rendererMode    sretchedBillboard
+renderer - rederMode - LengthScale 3
+renerer - renderMode - speedScale 0.02
+start size  0.12
+gravity modifier	1
+(enable)collision - change [planes] To [world]
+startColor  hsva(46,255,255,255)
+startLifetime - 2
+start speed - 8.4
+emission - rate 100(by time)
+startSize  RandomBetweenTwoConstants(0.025 ~ 0.05)
+startSpeed RBTC(5~10)
+startLifeTime RBTC(1~2)
+collision - dampan 0.5
+collision - bounce 0.5
+shape - angle  15
+(enable)ColorOverLifetime(alpha(0%:0,10%:255,80%:255,100%:0), color by hsva(0%:white,50%:white,100%:(16,255,255)))
+
+NONE CONSTANTS------------
+emission - rate 0
+emission - bursts
+	time	min	max
+	0	10	50
+	2	10	50
+	2.5	10	50
+	3	10	50
+
+LIGHT EFFECT--(New version of unity required)-----------
+create a new [Point Light] object and reset position
+(enable)lights - refrence the Light to the pointLight we just created
+lights - rate 0.25
+lights - rangeMultiplier 1.5
+lights - intensityMultiplier 10
+
